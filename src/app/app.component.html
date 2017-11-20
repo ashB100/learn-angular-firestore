@@ -1,5 +1,5 @@
 <form #myForm="ngForm"
-  (ngSubmit)="addProduct(myForm.value)">
+  (ngSubmit)="addDocument(myForm.value)">
   <label for="productName">Name</label>
   <input type="text" (ngModel)="productName"
          name="productName"
@@ -12,7 +12,13 @@
 </form>
 
 <ul>
-  <li *ngFor="let item of items$ | async">
-    {{item.name}}
+  Product  Price
+  <li *ngFor="let product of products$ | async"
+    (click)="getDocument(product.id)">
+    {{product.name}} {{product.price}}
+    <button (click)="deleteDocument(product.id)">Delete</button>
   </li>
 </ul>
+
+<h1>{{ (product$ | async)?.name}}</h1>
+<p>{{ (product$ | async)?.price}}</p>
