@@ -10,15 +10,18 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../routing';
 
 import { LoginComponent } from './authentication/login.component';
+import { ProductDetailComponent } from './product-list/product-detail.component';
 import { ProductList } from './product-list/product-list.component';
 
 import { AuthenticationService } from './authentication/authentication.service';
 import { ProductDataResolver } from './product-list/product-list-data-resolver';
+import { ProductDataService } from './product-list/product-data.service';
 
 @NgModule({
   declarations: [
     LoginComponent,
     ProductList,
+    ProductDetailComponent,
     AppComponent,
   ],
   imports: [
@@ -31,7 +34,8 @@ import { ProductDataResolver } from './product-list/product-list-data-resolver';
   ],
   providers: [
     AuthenticationService,
-    ProductDataResolver
+    ProductDataResolver,
+    ProductDataService
   ],
   bootstrap: [AppComponent]
 })

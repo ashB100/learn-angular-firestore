@@ -19,7 +19,6 @@ export class ProductDataResolver implements Resolve<any> {
                 });
             })
             .take(1);
-        console.log('items', items);
         return items;
     }
 }

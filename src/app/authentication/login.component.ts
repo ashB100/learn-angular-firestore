@@ -11,19 +11,11 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'login',
     template: `
-    <div *ngIf="authState$ | async; let user; else showLogin">
-    <h1>Hello {{ user.displayName }}!</h1>
-    <button (click)="logout()">Logout</button>
-  </div>
-  
-  <ng-template #showLogin>
-    <p>Please login.</p>
-    <button >Login with Email</button>
-    <button (click)="login('google')">Login with Google</button>
-    <button (click)="login('twitter')">Login with Twitter</button>
-    <button (click)="login('github')">Login with Github</button>
-    <button (click)="login('facebook')">Login with Facebook</button>
-  </ng-template>
+        <button >Login with Email</button>
+        <button (click)="login('google')">Login with Google</button>
+        <button (click)="login('twitter')">Login with Twitter</button>
+        <button (click)="login('github')">Login with Github</button>
+        <button (click)="login('facebook')">Login with Facebook</button>
     `,
     styles: [`
     
@@ -41,14 +33,16 @@ export class LoginComponent implements OnInit {
     }
     
     login(provider:string) {
-        this.authService.login(provider)
+        console.log(this.authService.login(provider));
+        this.router.navigate(['products']);
+        /*this.authService.login(provider)
             .then(credentials => {
                 console.log('login credentials', credentials);
-                this.router.navigateByUrl('/products');
+                this.router.navigate(['products']);
             },
             error => {
                 console.log('error', error);
-            });
+            });*/
     }
 
     // Subscribe to auth.onAuthStateChanged
@@ -58,6 +52,9 @@ export class LoginComponent implements OnInit {
     // User Model {name, avatar, email, provider, anything else}
 
     logout() {
-        this.authService.logout();
+        this.authService.logout()
+            .then(() => {
+                this.router.navigate(['/login']);
+            });
     }
 }
