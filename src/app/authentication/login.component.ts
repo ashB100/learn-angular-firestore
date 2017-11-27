@@ -33,16 +33,15 @@ export class LoginComponent implements OnInit {
     }
     
     login(provider:string) {
-        console.log(this.authService.login(provider));
-        this.router.navigate(['products']);
-        /*this.authService.login(provider)
+        this.authService.login(provider)
             .then(credentials => {
                 console.log('login credentials', credentials);
+                console.log('current user', this.authService.currentUser);
                 this.router.navigate(['products']);
             },
             error => {
                 console.log('error', error);
-            });*/
+            });
     }
 
     // Subscribe to auth.onAuthStateChanged

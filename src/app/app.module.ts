@@ -8,6 +8,8 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../routing';
+import { MaterialModule } from './material.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { LoginComponent } from './authentication/login.component';
 import { ProductDetailComponent } from './product-list/product-detail.component';
@@ -30,12 +32,14 @@ import { ProductDataService } from './product-list/product-data.service';
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MaterialModule,
+    FlexLayoutModule
   ],
   providers: [
     AuthenticationService,
     ProductDataResolver,
-    ProductDataService
+    ProductDataService,
   ],
   bootstrap: [AppComponent]
 })

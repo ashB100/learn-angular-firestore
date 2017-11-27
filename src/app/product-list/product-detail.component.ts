@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Product } from './product.model';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { ProductDataResolver } from './product-list-data-resolver';
-import { ProductDataService } from './product-data.service';
+import {Component, OnInit} from '@angular/core';
+import {Product} from './product.model';
+import {ActivatedRoute, ParamMap} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import {ProductDataService} from './product-data.service';
 
 @Component({
     selector: 'product-detail',
@@ -13,14 +12,19 @@ import { ProductDataService } from './product-data.service';
     `
 })
 export class ProductDetailComponent implements OnInit {
-    product$: Observable<Product>;
+    product$: Observable<Product | undefined>;
 
-    constructor(private route: ActivatedRoute, private productService: ProductDataService ) {}
+    constructor(private route: ActivatedRoute, private productService: ProductDataService) {
+    }
 
     ngOnInit() {
+        // TODO
         this.product$ = this.route.paramMap
-        .switchMap((params: ParamMap) => {
-            return this.productService.getProduct(params.get('id'));
-        });
+            .map((params: ParamMap) => params.get('id'))
+            .filter((productId: string | null) => !!productId)
+            .switchMap((productId: string) => {
+                return this.productService.getProduct(productId)
+            })
+        ;
     }
 }

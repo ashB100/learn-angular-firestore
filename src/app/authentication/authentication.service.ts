@@ -1,57 +1,63 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
-import AuthCredential = firebase.auth.AuthCredential;
-import { Observable } from 'rxjs/Observable';
+import { auth } from 'firebase/app';
+
+// type SupportedProvider = 'twitter' | 'facebook';
+
+// export const SupportedProviders: { [k: SupportedProvider]: auth.AuthProvider } = {};
+export enum SupportedProvider {
+  Twitter,
+  Google,
+}
+
 
 @Injectable()
 export class AuthenticationService {
-    user$: Observable<firebase.User>;
-    currentUser: firebase.User|null = null;
+  //user$: Observable<firebase.User>;
+  currentUser: firebase.User | null = null;
 
-    constructor(private afAuth: AngularFireAuth) {}
-    
-    login(provider:string) {
-        let providerInstance = this.getProvider(provider);
-        this.afAuth.auth.signInWithPopup(providerInstance)
-            .then(credentials => {
-                this.currentUser = credentials.user;
-                return this.afAuth.authState;
-            },
-            err => {
-                // Show error message using Angular Material
-            })
-    }
+  constructor(private afAuth: AngularFireAuth) {
+    afAuth.auth.onAuthStateChanged(user => {
+      this.currentUser = user;
+    });
+  }
 
-    getCurrentUser() {
-        return this.currentUser;
-    }
+  login(provider: SupportedProvider) {
+    let providerInstance = this.getProvider(provider);
+    return this.afAuth.auth.signInWithPopup(providerInstance);
+  }
 
-    getProvider(provider: string): AuthCredential {
-        const auth = firebase.auth;
-        const providers = {
-            twitter : new auth.TwitterAuthProvider(),
-            facebook: new auth.FacebookAuthProvider(),
-            github: new auth.GithubAuthProvider(),
-            google: new auth.GoogleAuthProvider()
-        };
+  getCurrentUser() {
+    return this.currentUser;
+  }
 
-        return providers[provider];
-    }
 
-    fetchProvidersForEmail(email: string) {
-        return this.afAuth.auth.fetchProvidersForEmail(email);
-    }
+  getProvider(provider: SupportedProvider): auth.AuthProvider {
+    const providers = {
+      [SupportedProvider.Twitter]: auth.TwitterAuthProvider,
+      // facebook: new auth.FacebookAuthProvider(),
+      // github: new auth.GithubAuthProvider(),
+      [SupportedProvider.Google]: auth.GoogleAuthProvider,
+    };
 
-    onAuthStateChanged() {
-        return this.afAuth.auth.onAuthStateChanged;
-    }
+    const providerClass = providers[provider];
+    return new providerClass();
+  }
 
-    authState() {
-        return this.afAuth.authState;
-    }
+  fetchProvidersForEmail(email: string) {
+    return this.afAuth.auth.fetchProvidersForEmail(email);
+  }
 
-    logout() {
-        return this.afAuth.auth.signOut();
-    }
+  onAuthStateChanged() {
+    return this.afAuth.auth.onAuthStateChanged;
+  }
+
+  authState() {
+    return this.afAuth.authState;
+  }
+
+  logout() {
+    return this.afAuth.auth.signOut();
+  }
 }

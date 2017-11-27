@@ -3,6 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/fires
 import { Product } from './product.model';
 import { Resolve } from '@angular/router';
 import 'rxjs/add/operator/take';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class ProductDataService implements Resolve<any> {
@@ -17,23 +18,23 @@ export class ProductDataService implements Resolve<any> {
             .take(1);
     }
 
-    addProduct(product: Product) {
-        return this.productCollection.add(product)
+    addProduct(product: Partial<Product>) {
+        return this.productCollection.add(product as Product);
     }
 
-    getProducts() {
+    getProducts(): Observable<Product[]> {
         return this.productCollection.snapshotChanges()
             .map(actions => {
                 return actions.map(action => {
                     const data = action.payload.doc.data();
                     const id = action.payload.doc.id;
 
-                    return { id, ...data };
+                    return { id, ...data } as Product;
                 });
             });
     }
 
-    getProduct(productId: string) {
+    getProduct(productId: string): Observable<Product> {
         return this.afs.doc<Product>(`items/${productId}`).valueChanges();
     }
 
