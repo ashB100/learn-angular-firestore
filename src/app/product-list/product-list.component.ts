@@ -10,27 +10,27 @@ import { Product } from './product.model';
   styles: [`
   `]
 })
-export class ProductList implements OnInit {
+export class ProductListComponent implements OnInit {
   name: string;
   price: number;
   products: Product[];
 
   constructor(private route: ActivatedRoute, private router: Router, private dataService: ProductDataService) {}
-  
   ngOnInit() {
+      console.log('did productlist ngoninit run?')
     this.products = this.route.snapshot.data['items'];
   }
 
   addProduct() {
     this.dataService.addProduct({
-        name: this.name, 
+        name: this.name,
         price: this.price,
     })
     .then(() => {
         this.dataService.getProducts()
             .subscribe(products => {
                 this.products = products;
-            })
+            });
     });
   }
 

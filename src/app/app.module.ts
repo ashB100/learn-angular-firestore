@@ -11,21 +11,24 @@ import { AppRoutingModule } from '../routing';
 import { MaterialModule } from './material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { LoginComponent } from './authentication/login.component';
 import { ProductDetailComponent } from './product-list/product-detail.component';
-import { ProductList } from './product-list/product-list.component';
-
-import { AuthenticationService } from './authentication/authentication.service';
-import { ProductDataResolver } from './product-list/product-list-data-resolver';
+import { ProductListComponent } from './product-list/product-list.component';
+import { NavigationComponent } from './nav/nav.component';
+import { AuthenticationService } from './user/authentication.service';
 import { ProductDataService } from './product-list/product-data.service';
+import { UserModule } from './user/user.module';
 
 @NgModule({
   declarations: [
-    LoginComponent,
-    ProductList,
+    ProductListComponent,
     ProductDetailComponent,
+    NavigationComponent,
     AppComponent,
   ],
+    entryComponents: [
+        ProductListComponent,
+        ProductDetailComponent
+    ],
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebase),
@@ -34,11 +37,11 @@ import { ProductDataService } from './product-list/product-data.service';
     FormsModule,
     AppRoutingModule,
     MaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    UserModule
   ],
   providers: [
     AuthenticationService,
-    ProductDataResolver,
     ProductDataService,
   ],
   bootstrap: [AppComponent]

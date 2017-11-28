@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { auth } from 'firebase/app';
+import { Router } from '@angular/router';
 
 // type SupportedProvider = 'twitter' | 'facebook';
 
@@ -14,18 +15,16 @@ export enum SupportedProvider {
 
 @Injectable()
 export class AuthenticationService {
-  //user$: Observable<firebase.User>;
   currentUser: firebase.User | null = null;
 
-  constructor(private afAuth: AngularFireAuth) {
+  constructor(private afAuth: AngularFireAuth, private router: Router) {
     afAuth.auth.onAuthStateChanged(user => {
       this.currentUser = user;
     });
   }
 
   login(provider: SupportedProvider) {
-    let providerInstance = this.getProvider(provider);
-    return this.afAuth.auth.signInWithPopup(providerInstance);
+    return this.afAuth.auth.signInWithPopup(this.getProvider(provider));
   }
 
   getCurrentUser() {
@@ -41,7 +40,8 @@ export class AuthenticationService {
       [SupportedProvider.Google]: auth.GoogleAuthProvider,
     };
 
-    const providerClass = providers[provider];
+    const providerClass: any = providers[SupportedProvider[provider]];
+
     return new providerClass();
   }
 
@@ -58,6 +58,11 @@ export class AuthenticationService {
   }
 
   logout() {
-    return this.afAuth.auth.signOut();
+      return this.afAuth.auth.signOut()
+        .then(() => this.router.navigate(['login']));
+  }
+
+  isAuthenticated() {
+    return !!this.currentUser;
   }
 }
