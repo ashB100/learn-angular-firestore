@@ -1,57 +1,53 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
-import { AuthenticationService } from './authentication.service';
-import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
-import { SupportedProvider } from './authentication.service';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {AuthenticationService} from './authentication.service';
+import {Router} from '@angular/router';
+import {SupportedProvider} from './authentication.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
-    template: `
-        <div fxLayout="column">
-            <mat-card fxLayout="column">
-                <h2>Login</h2>
- 
-                <mat-card-content fxLayout="column">
-                    <button >Login with Email</button>
-                    <button mat-raised-button (click)="login('Google')">
-                        <mat-icon></mat-icon>Login with Google
-                    </button>
-                    <button mat-raised-button (click)="login('Twitter')">
-                        <mat-icon>home</mat-icon> Login with Twitter
-                    </button>
-                    <button mat-raised-button (click)="login('Github')">
-                        <mat-icon></mat-icon>Login with Github
-                    </button>
-                    <button mat-raised-button (click)="login('Facebook')">Login with Facebook</button>
-
-                </mat-card-content>
-
-            </mat-card>
-        </div>
-    `,
-    styles: [`
-    `]
+  template: `
+      <div fxLayout="column">
+          <mat-card>
+            <button *ngFor="let prov of providers"
+                    mat-raised-button
+                    (click)="login(prov)">
+                Login with {{prov}}
+            </button>
+          </mat-card>
+      </div>
+  `,
+  styles: [`
+  `]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
-    constructor(private authService: AuthenticationService, private router: Router) {}
+  subscription: Subscription;
+  providers =  Object.keys(SupportedProvider)
+    .filter(key => !isNaN(Number(SupportedProvider[key])
+  ));
 
-    ngOnInit() {}
+  constructor(private authService: AuthenticationService, private router: Router) {
+  }
 
-    login(provider: SupportedProvider) {
-        this.authService.login(provider)
-            .then(credentials => {
-                this.router.navigate(['products'])
-                    .then(user => console.log('current user', this.authService.currentUser));
-            },
-            error => {
-                console.log('error', error);
-            });
-    }
+  ngOnInit() {
+  }
 
-    logout() {
-        this.authService.logout()
-            .then(() => {
-                this.router.navigate(['/login']);
-            });
-    }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  login(provider: SupportedProvider) {
+    this.subscription = this.authService.login(provider)
+      .subscribe({
+        next: (user: any) => {
+          this.router.navigate(['products']);
+        },
+        error: (err: any ) => console.log(err),
+        complete: () => console.log('completed')
+      });
+  }
+
+  logout() {
+    this.authService.logout();
+  }
 }

@@ -6,7 +6,6 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../routing';
 import { MaterialModule } from './material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -17,6 +16,7 @@ import { NavigationComponent } from './nav/nav.component';
 import { AuthenticationService } from './user/authentication.service';
 import { ProductDataService } from './product-list/product-data.service';
 import { UserModule } from './user/user.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -34,11 +34,11 @@ import { UserModule } from './user/user.module';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
-    FormsModule,
     AppRoutingModule,
     MaterialModule,
     FlexLayoutModule,
-    UserModule
+    UserModule,
+    SharedModule
   ],
   providers: [
     AuthenticationService,

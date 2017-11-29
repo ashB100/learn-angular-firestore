@@ -14,7 +14,6 @@ export class ProductDataService implements Resolve<any> {
     }
 
     resolve() {
-        console.log("did the router resolve get run?");
         return this.getProducts()
             .take(1);
     }
@@ -29,7 +28,7 @@ export class ProductDataService implements Resolve<any> {
                 return actions.map(action => {
                     const data = action.payload.doc.data();
                     const id = action.payload.doc.id;
-                    console.log("get products", id, data);
+
                     return { id, ...data } as Product;
                 });
             });

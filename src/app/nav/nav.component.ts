@@ -5,26 +5,33 @@ import { AuthenticationService } from '../user/authentication.service';
     selector: 'app-nav',
     template: `
         <nav mat-tab-nav-bar backgroundColor="primary">
-            <a mat-tab-link *ngFor="let link of links"
+            <!--a mat-tab-link *ngFor="let link of links"
                 [routerLink]="link.path"
                 [active]="route.isActive"
                 routerLinkActive #route="routerLinkActive">
                 <span>{{ link.label }}</span>
+            </a-->
+            <a *ngIf="authService.isAuthenticated()"
+               mat-tab-link
+                [routerLink]="['/products']"
+                routerLinkActive="active">
+                <span>Products</span>
             </a>
-            <a mat-tab-link
-                routerLink="/login"
-                routerLinkActive="active"
-                *ngIf="!authService.isAuthenticated()">
+            <a *ngIf="!authService.isAuthenticated()"
+               mat-tab-link
+               [routerLink]="['/login']"
+               routerLinkActive="active">
                 <span>Login</span>
             </a>
-            <a mat-tab-link>
-                <span *ngIf="authService.isAuthenticated()">Welcome {{ authService.currentUser.displayName}}</span>    
+            <a *ngIf="authService.isAuthenticated()"
+               mat-tab-link>
+                <span>Welcome {{ authService.currentUser.displayName}}</span>
             </a>
-            
-            <a mat-tab-link
+
+            <a *ngIf="authService.isAuthenticated()"
+               mat-tab-link
                (click)="authService.logout()"
-               routerLinkActive="active"
-               *ngIf="authService.isAuthenticated()">
+               routerLinkActive="active">
                 <span>Logout</span>
             </a>
         </nav>
@@ -38,8 +45,6 @@ export class NavigationComponent {
     ];
 
     constructor(public authService: AuthenticationService) {}
-
-    // Subscribe to auth.onAuthStateChanged
     // Use users displayName, photoUrl
     // If user is logged in set current user to the user information
     // otherwise set it to null or {}??
