@@ -14,9 +14,9 @@
 Product  Price
 
 <ul>
-  <li *ngFor="let product of products"
-    [routerLink]="['/products', product.id]">
-    {{ product.name }} {{ product.price }}
+  <li *ngFor="let product of products">
+    <span [routerLink]="['/products', product.id]">{{ product.name }} {{ product.price }}</span>
+    <button [routerLink]="['products', product.id, 'edit']">Edit</button>
     <button (click)="deleteProduct(product.id)">Delete</button>
   </li>
 </ul>

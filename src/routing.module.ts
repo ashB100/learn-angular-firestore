@@ -6,7 +6,7 @@ import { ProductDataService } from './app/product-list/product-data.service';
 import { NgModule } from '@angular/core';
 
 const routes: Routes = [
-    { path: 'login', component: LoginComponent },
+    //{ path: 'login', component: LoginComponent },
     //{ path: 'products', component: ProductListComponent, resolve: {items: ProductDataService } },
     //{ path: 'products/:id', component: ProductDetailComponent },
     { path: '', redirectTo: '/login', pathMatch: 'full' },

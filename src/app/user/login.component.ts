@@ -21,20 +21,12 @@ import {Subscription} from 'rxjs/Subscription';
   `]
 })
 export class LoginComponent implements OnInit, OnDestroy {
-
   subscription: Subscription;
-
   providers = Object.values(SupportedProvider);
 
-  /*providers =  Object.keys(SupportedProvider)
-    .filter(key => !isNaN(Number(SupportedProvider[key])
-  )); */
+  constructor(private authService: AuthenticationService, private router: Router) {}
 
-  constructor(private authService: AuthenticationService, private router: Router) {
-  }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
@@ -44,7 +36,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.subscription = this.authService.login(provider)
       .subscribe({
         next: (user: any) => {
-          this.router.navigate(['products']);
+          this.router.navigateByUrl('/products');
         },
         error: (err: any ) => console.log(err),
         complete: () => console.log('completed')

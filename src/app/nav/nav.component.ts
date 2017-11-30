@@ -25,7 +25,7 @@ import { AuthenticationService } from '../user/authentication.service';
             </a>
             <a *ngIf="authService.isAuthenticated()"
                mat-tab-link>
-                <span>Welcome {{ authService.currentUser.displayName}}</span>
+                <span>Welcome {{ authService.currentUser?.displayName}}</span>
             </a>
 
             <a *ngIf="authService.isAuthenticated()"
