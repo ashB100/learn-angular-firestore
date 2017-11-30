@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {AuthenticationService} from './authentication.service';
 import {LoginComponent} from './login.component';
 import {RouterModule} from '@angular/router';
-import {MaterialModule} from '../material.module';
 import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
@@ -13,7 +12,6 @@ import {SharedModule} from '../shared/shared.module';
     RouterModule.forChild([
       { path: 'login', component: LoginComponent }
     ]),
-    MaterialModule,
     SharedModule
   ],
   providers: [

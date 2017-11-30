@@ -70,9 +70,10 @@ export class AuthenticationService {
     return this.afAuth.authState;
   }
 
+  //Todo: return an observable and navigate to login in login component
   logout() {
       this.afAuth.auth.signOut()
-        .then(() => this.router.navigate(['login']));
+        .then(() => this.router.navigateByUrl('/login'));
   }
 
   isAuthenticated() {

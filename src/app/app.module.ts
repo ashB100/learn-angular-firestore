@@ -6,44 +6,36 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { AppRoutingModule } from '../routing';
-import { MaterialModule } from './material.module';
+import { AppRoutingModule } from '../routing.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { ProductDetailComponent } from './product-list/product-detail.component';
-import { ProductListComponent } from './product-list/product-list.component';
 import { NavigationComponent } from './nav/nav.component';
 import { AuthenticationService } from './user/authentication.service';
-import { ProductDataService } from './product-list/product-data.service';
 import { UserModule } from './user/user.module';
 import { SharedModule } from './shared/shared.module';
+import {ProductModule} from './product-list/product.module';
 
 @NgModule({
   declarations: [
-    ProductListComponent,
-    ProductDetailComponent,
     NavigationComponent,
     AppComponent,
   ],
-    entryComponents: [
-        ProductListComponent,
-        ProductDetailComponent
-    ],
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
-    AppRoutingModule,
-    MaterialModule,
     FlexLayoutModule,
+    ProductModule,
     UserModule,
+    AppRoutingModule,
     SharedModule
   ],
   providers: [
-    AuthenticationService,
-    ProductDataService,
+    AuthenticationService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent
+  ]
 })
 export class AppModule { }
