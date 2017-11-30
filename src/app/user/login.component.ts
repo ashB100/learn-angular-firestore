@@ -5,6 +5,7 @@ import {SupportedProvider} from './authentication.service';
 import {Subscription} from 'rxjs/Subscription';
 
 @Component({
+    selector: 'login',
   template: `
       <div fxLayout="column">
           <mat-card>
@@ -22,9 +23,12 @@ import {Subscription} from 'rxjs/Subscription';
 export class LoginComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
-  providers =  Object.keys(SupportedProvider)
+
+  providers = Object.values(SupportedProvider);
+
+  /*providers =  Object.keys(SupportedProvider)
     .filter(key => !isNaN(Number(SupportedProvider[key])
-  ));
+  )); */
 
   constructor(private authService: AuthenticationService, private router: Router) {
   }

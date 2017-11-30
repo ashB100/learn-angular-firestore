@@ -25,6 +25,7 @@ export class ProductDataService implements Resolve<any> {
     getProducts(): Observable<Product[]> {
         return this.productCollection.snapshotChanges()
             .map(actions => {
+                console.log('getProducts', actions);
                 return actions.map(action => {
                     const data = action.payload.doc.data();
                     const id = action.payload.doc.id;

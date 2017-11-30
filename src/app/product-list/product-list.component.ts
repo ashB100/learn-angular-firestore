@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+
 import { ProductDataService } from './product-data.service';
 import { Product } from './product.model';
 
 @Component({
-  selector: 'app-root',
+    selector: 'product-list',
   templateUrl: './product-list.component.html',
   styles: [`
   `]
@@ -12,11 +13,14 @@ import { Product } from './product.model';
 export class ProductListComponent implements OnInit {
   name: string;
   price: number;
-  products: Product[];
+  products: Product[] = [];
 
-  constructor(private route: ActivatedRoute, private router: Router, private dataService: ProductDataService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private dataService: ProductDataService) {
+      console.log("ProductListComponent constructor", route);
+  }
+  
   ngOnInit() {
-      console.log('did productlist ngoninit run?')
+    console.log('did productlist ngoninit run?')
     this.products = this.route.snapshot.data['items'];
   }
 

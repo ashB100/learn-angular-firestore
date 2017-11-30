@@ -5,13 +5,15 @@ import { auth } from 'firebase/app';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
+
 // type SupportedProvider = 'twitter' | 'facebook';
 
 // export const SupportedProviders: { [k: SupportedProvider]: auth.AuthProvider } = {};
 export enum SupportedProvider {
-  Twitter,
-  Google,
+  Twitter = 'Twitter',
+  Google = 'Google',
 }
+
 
 @Injectable()
 export class AuthenticationService {
@@ -25,7 +27,7 @@ export class AuthenticationService {
   }
 
   login(provider: SupportedProvider) {
-    const observable = Observable.create( (observer: Observer<any>) => {
+    return Observable.create( (observer: Observer<any>) => {
       this.afAuth.auth.signInWithPopup(this.getProvider(provider))
         .then(user => {
             this.currentUser = user;
@@ -36,8 +38,6 @@ export class AuthenticationService {
             observer.error(err);
           });
     });
-
-    return observable;
   }
 
   getCurrentUser() {
@@ -45,16 +45,15 @@ export class AuthenticationService {
   }
 
   getProvider(provider: SupportedProvider): auth.AuthProvider {
-    const providers = {
+    // TS complains about `typeof auth.AuthProvider`, so we use any
+    const providers: { [key: string]: any } = {
       [SupportedProvider.Twitter]: auth.TwitterAuthProvider,
       // facebook: new auth.FacebookAuthProvider(),
       // github: new auth.GithubAuthProvider(),
       [SupportedProvider.Google]: auth.GoogleAuthProvider,
     };
 
-    console.log('provider', provider);
-    const providerClass: any = providers[SupportedProvider[provider]];
-
+    const providerClass: any = providers[provider];
     return new providerClass();
   }
 
