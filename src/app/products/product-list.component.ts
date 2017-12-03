@@ -1,11 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { ProductDataService } from './product-data.service';
 import { Product } from './product.model';
 
 @Component({
-    selector: 'product-list',
+  selector: 'product-item',
+  template: `
+    <span [routerLink]="[product.id]">{{ product.name }} {{ product.price }}</span>
+    <button [routerLink]="[product.id, 'edit']">Edit</button>
+    
+    <button (click)="editClick.next(product.id)">Delete</button>
+  `,
+})
+export class ProductItemComponent {
+  @Input() product: Product;
+  @Output() editClick = new EventEmitter();
+  
+  
+}
+
+@Component({
+  selector: 'product-list',
   templateUrl: './product-list.component.html',
   styles: [`
   `]
@@ -20,7 +36,6 @@ export class ProductListComponent implements OnInit {
   }
   
   ngOnInit() {
-    console.log('did productlist ngoninit run?')
     this.products = this.route.snapshot.data['items'];
   }
 

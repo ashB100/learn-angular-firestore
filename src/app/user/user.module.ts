@@ -10,7 +10,7 @@ import {SharedModule} from '../shared/shared.module';
   ],
   imports: [
     RouterModule.forChild([
-      { path: 'login', component: LoginComponent }
+      { path: '', component: LoginComponent }
     ]),
     SharedModule
   ],
@@ -18,5 +18,5 @@ import {SharedModule} from '../shared/shared.module';
     AuthenticationService
   ]
 })
-export class UserModule {
-}
+export class UserModule {}
+

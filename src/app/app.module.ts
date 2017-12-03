@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from '@angular/core';
 
 import { AngularFireModule } from 'angularfire2';
@@ -11,9 +12,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { NavigationComponent } from './nav/nav.component';
 import { AuthenticationService } from './user/authentication.service';
-import { UserModule } from './user/user.module';
 import { SharedModule } from './shared/shared.module';
-import {ProductModule} from './product-list/product.module';
 
 @NgModule({
   declarations: [
@@ -22,12 +21,13 @@ import {ProductModule} from './product-list/product.module';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
     FlexLayoutModule,
-    ProductModule,
-    UserModule,
+    //ProductModule,
+    //UserModule,
     AppRoutingModule,
     SharedModule
   ],

@@ -7,7 +7,7 @@ import {
   MatInputModule,
   MatNativeDateModule,
   MatTabsModule,
-  MatToolbarModule
+  MatToolbarModule,
 } from '@angular/material';
 
 @NgModule({
@@ -19,7 +19,7 @@ import {
     MatInputModule,
     MatTabsModule,
     MatNativeDateModule,
-    MatIconModule
+    MatIconModule,
   ]
 })
 export class MaterialModule {}
