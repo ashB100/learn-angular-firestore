@@ -9,7 +9,7 @@ export class Product {
   name: string = "";
   price: number = 0;
   
-  constructor(values?: Partial<ProductInterface>) {
+  constructor(values: Partial<ProductInterface> = {}) {
     console.log('new Product()', values);
     Object.assign(this, values);
   }

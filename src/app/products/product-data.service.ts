@@ -32,14 +32,14 @@ export class ProductDataService implements Resolve<any> {
                     const data = action.payload.doc.data();
                     const id = action.payload.doc.id;
 
-                    return { id, ...data } as Product;
+                    return new Product({ id, ...data }) as Product;
                 });
             });
     }
     
     getProductFromRoute(route: ActivatedRoute): Observable<Product | null>  {
       return route.paramMap
-          .do((value:any) => console.log('id', value))
+          .map(params => params.get('id'))
           .switchMap((productId: string) => this.getProduct(productId));
     }
 
@@ -49,7 +49,6 @@ export class ProductDataService implements Resolve<any> {
         return Observable.of(null);
       }
       
-      console.log('getProduct', { productId });
       let productRef = this.productCollection.doc(productId);
       
       return productRef
@@ -67,10 +66,11 @@ export class ProductDataService implements Resolve<any> {
         return this.afs.doc(`items/${productId}`).delete();
     }
 
-    updateProduct() {
+    updateProduct(product) {
       // Update database and refresh internal cache of products
       // Look into whether to update only changed product in the product list or
       // just clear the cache so a new set is fetched from database
+      //console.log('update product', product);
     }
     searchDocument(term: string) {
         return this.afs.collection('items', ref => ref.where('name', '==', term));

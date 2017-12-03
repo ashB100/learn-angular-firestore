@@ -21,7 +21,6 @@ export class AuthenticationService {
 
   constructor(private afAuth: AngularFireAuth, private router: Router) {
     afAuth.auth.onAuthStateChanged(user => {
-      console.log('onAuthStateChanged', user);
       this.currentUser = user;
     });
   }
