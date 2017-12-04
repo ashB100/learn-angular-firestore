@@ -13,13 +13,14 @@
 
 Product  Price
 
-<ul>
-  <li *ngFor="let product of products">
+<mat-list>
+  <ng-container *ngFor="let product of products">
     <!--<span [routerLink]="['/products', product.id]">{{ product.name }} {{ product.price }}</span>-->
     <!--<button [routerLink]="['products', product.id, 'edit']">Edit</button>-->
     <!--<button (click)="deleteProduct(product.id)">Delete</button>-->
     <product-item [product]="product"
             (editClick)="deleteProduct($event)">
     </product-item>
-  </li>
-</ul>
+
+  </ng-container>
+</mat-list>

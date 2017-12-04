@@ -7,10 +7,16 @@ import { Product } from './product.model';
 @Component({
   selector: 'product-item',
   template: `
-      <span [routerLink]="[product.id]">{{ product.name }} {{ product.price }}</span>
-      <button [routerLink]="[product.id, 'edit']">Edit</button>
-
-      <button (click)="editClick.next(product.id)">Delete</button>
+      <mat-list-item>
+        <h3 matLine>{{ product.name }}</h3>
+        <button mat-mini-fab color="accent"><mat-icon>edit</mat-icon></button>
+        &nbsp;
+        <button mat-mini-fab color="warn"><mat-icon>delete_forever</mat-icon></button>
+      </mat-list-item>
+      
+      <!--<span [routerLink]="[product.id]">{{ product.name }} {{ product.price }}</span>-->
+      <!--<button [routerLink]="[product.id, 'edit']">Edit</button>-->
+      <!--<button (click)="editClick.next(product.id)">Delete</button>-->
   `,
 })
 export class ProductItemComponent {

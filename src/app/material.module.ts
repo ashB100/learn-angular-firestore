@@ -8,6 +8,8 @@ import {
   MatNativeDateModule,
   MatTabsModule,
   MatToolbarModule,
+  MatSnackBarModule,
+  MatListModule,
 } from '@angular/material';
 
 @NgModule({
@@ -20,6 +22,8 @@ import {
     MatTabsModule,
     MatNativeDateModule,
     MatIconModule,
+    MatSnackBarModule,
+    MatListModule,
   ]
 })
 export class MaterialModule {}

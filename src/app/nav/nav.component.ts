@@ -4,7 +4,9 @@ import { AuthenticationService } from '../user/authentication.service';
 @Component({
     selector: 'app-nav',
     template: `
-        <nav mat-tab-nav-bar backgroundColor="primary">
+        <mat-toolbar class="container" color="primary">Chocolates</mat-toolbar>
+        
+        <nav class="container" mat-tab-nav-bar backgroundColor="primary">
             <!--a mat-tab-link *ngFor="let link of links"
                 [routerLink]="link.path"
                 [active]="route.isActive"
@@ -37,6 +39,10 @@ import { AuthenticationService } from '../user/authentication.service';
         </nav>
     `,
     styles: [`
+        :host {
+            display: block;
+            background-color: #6d4c41;
+        }
     `]
 })
 export class NavigationComponent {

@@ -5,6 +5,7 @@ import { Observable } from "rxjs/Observable";
 
 import { Product } from "./product.model";
 import { ProductDataService } from "./product-data.service";
+import { MatSnackBar } from "@angular/material";
 
 @Component({
   template: `
@@ -23,13 +24,14 @@ import { ProductDataService } from "./product-data.service";
                       </mat-form-field>
 
                       <mat-form-field class="full-width">
-                          <input formControlName="price" matInput placeholder="Price">
+                          <input type="number" formControlName="price" matInput placeholder="Price">
                       </mat-form-field>
                   </form>
               </mat-card-content>
               <mat-card-actions>
-                  <button (click)="save(productEditForm.value)" type="submit" mat-button>Save</button>
-                  <button (click)="cancel()" mat-button>Cancel</button>
+                  <button (click)="save(productEditForm.value)" type="submit" mat-raised-button color="primary">Save</button>
+                  <button (click)="cancel()" mat-raised-button color="accent">Cancel</button>
+                  <button (click)="cancel()" mat-raised-button color="warn">Cancel</button>
               </mat-card-actions>
 
           </ng-container>
@@ -56,6 +58,7 @@ export class ProductEditComponent implements OnInit {
       private route: ActivatedRoute,
       private router: Router,
       private productService: ProductDataService,
+      private snackBar: MatSnackBar
   ) {}
   
   ngOnInit() {
@@ -94,6 +97,7 @@ export class ProductEditComponent implements OnInit {
       this.productService.addProduct(product)
           .then(product => {
             // TODO: display message on snackbar
+            this.openSnackBar('Product added', 'successfully');
             console.log('product created', product);
           })
     }
@@ -101,6 +105,7 @@ export class ProductEditComponent implements OnInit {
       this.productService.updateProduct({product: product, id: this.params.id })
           .then(() => {
             // TODO: display message on snackbar
+            this.openSnackBar('Product updated', 'successfully');
             console.log('product updated')
           })
     }
@@ -109,6 +114,12 @@ export class ProductEditComponent implements OnInit {
   
   cancel() {
     this.router.navigate(['/products']);
+  }
+  
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 6000
+    });
   }
 }
 
