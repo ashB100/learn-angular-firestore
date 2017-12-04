@@ -9,7 +9,7 @@ import { ProductDataService } from "./product-data.service";
 @Component({
   template: `
       <mat-card>
-          <ng-container *ngIf="product$ | async as product; else productNotFound">
+          <ng-container *ngIf="product; else productNotFound">
               <mat-card-header [ngSwitch]="params?.isNewProduct">
                   <mat-card-title *ngSwitchCase="true">Create New Product</mat-card-title>
                   <mat-card-title *ngSwitchCase="false">Edit Product</mat-card-title>
@@ -28,7 +28,7 @@ import { ProductDataService } from "./product-data.service";
                   </form>
               </mat-card-content>
               <mat-card-actions>
-                  <button (click)="updateProduct(productEditForm)" type="submit" mat-button>Save</button>
+                  <button (click)="save(productEditForm.value)" type="submit" mat-button>Save</button>
                   <button (click)="cancel()" mat-button>Cancel</button>
               </mat-card-actions>
 
@@ -46,12 +46,10 @@ import { ProductDataService } from "./product-data.service";
   `]
 })
 export class ProductEditComponent implements OnInit {
-  productEditForm: FormGroup = new FormGroup({
-    name: new FormControl(),
-    price: new FormControl(),
-  });
+  productEditForm: FormGroup;
   
-  product$: Observable<Product | null>;
+  //product$: Observable<Product | null>;
+  product: Product;
   params: any;
   
   constructor(
@@ -70,18 +68,43 @@ export class ProductEditComponent implements OnInit {
         }).subscribe(routeParams => this.params = routeParams);
     
     if (this.params.isNewProduct) {
-      this.product$ = Observable.of(new Product());
+      this.product = new Product();
+      this.createFormControlGroup(this.product);
     }
     else {
-      this.product$ = this.productService.getProduct(this.params.id);
-      
+      this.productService.getProduct(this.params.id)
+          .subscribe((product: Product) => {
+            this.product = product;
+            this.createFormControlGroup(this.product);
+          })
     }
   }
   
+  createFormControlGroup(product: Product) {
+    this.productEditForm = new FormGroup({
+      name: new FormControl(product.name),
+      price: new FormControl(product.price),
+    });
+    
+    //this.productEditForm.setValue(product);
+  }
   // edit calls service to update database
-  updateProduct(product?: Product) {
-    console.log('Update Product', product);
-    this.productService.updateProduct(product);
+  save(product: Product) {
+    if(this.params.isNewProduct) {
+      this.productService.addProduct(product)
+          .then(product => {
+            // TODO: display message on snackbar
+            console.log('product created', product);
+          })
+    }
+    else {
+      this.productService.updateProduct({product: product, id: this.params.id })
+          .then(() => {
+            // TODO: display message on snackbar
+            console.log('product updated')
+          })
+    }
+    //this.productService.updateProduct({product: product, id: this.params.id });
   }
   
   cancel() {

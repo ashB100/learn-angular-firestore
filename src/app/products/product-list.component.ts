@@ -16,8 +16,6 @@ import { Product } from './product.model';
 export class ProductItemComponent {
   @Input() product: Product;
   @Output() editClick = new EventEmitter();
-  
-  
 }
 
 @Component({
@@ -27,8 +25,6 @@ export class ProductItemComponent {
   `]
 })
 export class ProductListComponent implements OnInit {
-  name: string;
-  price: number;
   products: Product[] = [];
   
   constructor(
@@ -41,21 +37,11 @@ export class ProductListComponent implements OnInit {
     this.products = this.route.snapshot.data['items'];
   }
   
-  addProduct() {
-    this.dataService.addProduct({
-      name: this.name,
-      price: this.price,
-    })
-        .then(() => {
-          this.dataService.getProducts()
-              .subscribe(products => {
-                this.products = products;
-              });
-        });
-  }
-  
   deleteProduct(documentId: string) {
     this.dataService.deleteProduct(documentId)
-        .then(() => this.router.navigate(['/products']))
+        .then(() => {
+          // TODO: write update to snackbar
+          this.router.navigate(['/products']);
+        })
   }
 }

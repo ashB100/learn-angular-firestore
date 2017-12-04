@@ -5,12 +5,11 @@ interface ProductInterface {
 }
 
 export class Product {
-  id: string = "";
+  id?: string;
   name: string = "";
   price: number = 0;
   
   constructor(values: Partial<ProductInterface> = {}) {
-    console.log('new Product()', values);
     Object.assign(this, values);
   }
 }

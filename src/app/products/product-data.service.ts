@@ -66,11 +66,13 @@ export class ProductDataService implements Resolve<any> {
         return this.afs.doc(`items/${productId}`).delete();
     }
 
-    updateProduct(product) {
+    updateProduct(options: any) {
       // Update database and refresh internal cache of products
       // Look into whether to update only changed product in the product list or
       // just clear the cache so a new set is fetched from database
-      //console.log('update product', product);
+      
+      // Get document reference and update
+      return this.productCollection.doc(options.id).update(options.product)
     }
     searchDocument(term: string) {
         return this.afs.collection('items', ref => ref.where('name', '==', term));
