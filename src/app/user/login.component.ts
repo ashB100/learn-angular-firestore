@@ -24,9 +24,12 @@ export class LoginComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   providers = Object.values(SupportedProvider);
 
-  constructor(private authService: AuthenticationService, private router: Router) {}
+  constructor(private authService: AuthenticationService, private router: Router) {
 
-  ngOnInit() {}
+  }
+
+  ngOnInit() {
+  }
 
   ngOnDestroy() {
     if (this.subscription) {

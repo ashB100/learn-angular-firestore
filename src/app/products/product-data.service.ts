@@ -1,22 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Product } from './product.model';
-import { ActivatedRoute, ParamMap, Resolve } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import 'rxjs/add/operator/take';
 import { Observable } from 'rxjs/Observable';
-import "rxjs/add/operator/do";
 
 @Injectable()
-export class ProductDataService implements Resolve<any> {
+export class ProductDataService  {
     productCollection: AngularFirestoreCollection<Product>;
 
     constructor(private afs: AngularFirestore, private route: ActivatedRoute) {
         this.productCollection = this.afs.collection('items');
-    }
-
-    resolve() {
-        return this.getProducts()
-            .take(1);
     }
 
     addProduct(product: Partial<Product>) {
@@ -36,7 +30,6 @@ export class ProductDataService implements Resolve<any> {
                 });
             });
     }
-    
     getProductFromRoute(route: ActivatedRoute): Observable<Product | null>  {
       return route.paramMap
           .map(params => params.get('id'))
@@ -48,13 +41,11 @@ export class ProductDataService implements Resolve<any> {
       if (!productId) {
         return Observable.of(null);
       }
-      
-      let productRef = this.productCollection.doc(productId);
-      
+      const productRef = this.productCollection.doc(productId);
       return productRef
           .valueChanges()
           .map((product: Product|null)  => {
-            if(product) {
+            if (product) {
               return new Product({ id: productRef.ref.id, ...product });
             }
             return product;

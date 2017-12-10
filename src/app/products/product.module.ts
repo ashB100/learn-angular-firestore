@@ -4,7 +4,9 @@ import {ProductItemComponent, ProductListComponent} from './product-list.compone
 import { SharedModule } from '../shared/shared.module';
 import { ProductDataService } from './product-data.service';
 import { RouterModule } from '@angular/router';
-import {ProductEditComponent} from "./product-edit.component";
+import {ProductEditComponent} from './product-edit.component';
+import {ProductResolver} from './product.resolver.service';
+import {ProductGuard} from './product.guard.service';
 
 @NgModule({
   declarations: [
@@ -15,7 +17,12 @@ import {ProductEditComponent} from "./product-edit.component";
   ],
   imports: [
     RouterModule.forChild([
-      { path: '', component: ProductListComponent, resolve: {items: ProductDataService } },
+      {
+        path: '',
+        component: ProductListComponent,
+        resolve: { items: ProductResolver },
+        canActivate: [ProductGuard]
+      },
       { path: 'new', component: ProductEditComponent },
       { path: ':id', component: ProductDetailComponent },
       { path: ':id/edit', component: ProductEditComponent }
@@ -23,7 +30,9 @@ import {ProductEditComponent} from "./product-edit.component";
     SharedModule
   ],
   providers: [
-    ProductDataService
+    ProductResolver,
+    ProductDataService,
+    ProductGuard
   ]
 })
 export class ProductModule {}

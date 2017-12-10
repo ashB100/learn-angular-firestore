@@ -32,22 +32,19 @@ export class ProductItemComponent {
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
-  
   constructor(
       private route: ActivatedRoute,
       private router: Router,
       private dataService: ProductDataService
   ) {}
-  
   ngOnInit() {
     this.products = this.route.snapshot.data['items'];
   }
-  
   deleteProduct(documentId: string) {
     this.dataService.deleteProduct(documentId)
         .then(() => {
           // TODO: write update to snackbar
           this.router.navigate(['/products']);
-        })
+        });
   }
 }

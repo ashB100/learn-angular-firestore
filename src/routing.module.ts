@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 const routes: Routes = [
     { path: 'login', loadChildren: 'app/user/user.module#UserModule' },
     { path: 'products', loadChildren: 'app/products/product.module#ProductModule'},
-    { path: '', redirectTo: '/login', pathMatch: 'full' },
+    { path: '', redirectTo: '/products', pathMatch: 'full' },
     //{ path: '**', component: LoginComponent }
 ];
 

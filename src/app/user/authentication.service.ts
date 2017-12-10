@@ -22,11 +22,14 @@ export class AuthenticationService {
   constructor(private afAuth: AngularFireAuth, private router: Router) {
     afAuth.auth.onAuthStateChanged(user => {
       this.currentUser = user;
+      console.log('constructor: user', user);
     });
   }
 
   login(provider: SupportedProvider) {
-    return Observable.create( (observer: Observer<any>) => {
+    // TODO: Do a better function composition here.
+    return Observable.fromPromise(this.afAuth.auth.signInWithPopup(this.getProvider(provider)));
+    /*return Observable.create( (observer: Observer<any>) => {
       this.afAuth.auth.signInWithPopup(this.getProvider(provider))
         .then(user => {
             this.currentUser = user;
@@ -36,7 +39,7 @@ export class AuthenticationService {
           err => {
             observer.error(err);
           });
-    });
+    }); */
   }
 
   getCurrentUser() {
@@ -47,8 +50,6 @@ export class AuthenticationService {
     // TS complains about `typeof auth.AuthProvider`, so we use any
     const providers: { [key: string]: any } = {
       [SupportedProvider.Twitter]: auth.TwitterAuthProvider,
-      // facebook: new auth.FacebookAuthProvider(),
-      // github: new auth.GithubAuthProvider(),
       [SupportedProvider.Google]: auth.GoogleAuthProvider,
     };
 
@@ -68,13 +69,12 @@ export class AuthenticationService {
     return this.afAuth.authState;
   }
 
-  //Todo: return an observable and navigate to login in login component
   logout() {
       this.afAuth.auth.signOut()
         .then(() => this.router.navigateByUrl('/login'));
   }
 
   isAuthenticated() {
-    return this.currentUser;
+    return this.currentUser !== null;
   }
 }

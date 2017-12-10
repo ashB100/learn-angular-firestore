@@ -1,8 +1,8 @@
-import {NgModule} from '@angular/core';
-import {AuthenticationService} from './authentication.service';
-import {LoginComponent} from './login.component';
-import {RouterModule} from '@angular/router';
-import {SharedModule} from '../shared/shared.module';
+import { NgModule } from '@angular/core';
+import { AuthenticationService } from './authentication.service';
+import { LoginComponent } from './login.component';
+import { RouterModule } from '@angular/router';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -10,13 +10,14 @@ import {SharedModule} from '../shared/shared.module';
   ],
   imports: [
     RouterModule.forChild([
-      { path: '', component: LoginComponent }
+      {path: '', component: LoginComponent}
     ]),
     SharedModule
   ],
   providers: [
-    AuthenticationService
+    AuthenticationService,
   ]
 })
-export class UserModule {}
+export class UserModule {
+}
 
