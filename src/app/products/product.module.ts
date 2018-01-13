@@ -23,9 +23,9 @@ import {ProductGuard} from './product.guard.service';
         resolve: { items: ProductResolver },
         canActivate: [ProductGuard]
       },
-      { path: 'new', component: ProductEditComponent },
-      { path: ':id', component: ProductDetailComponent },
-      { path: ':id/edit', component: ProductEditComponent }
+      { path: 'new', component: ProductEditComponent, canActivate: [ProductGuard] },
+      { path: ':id', component: ProductDetailComponent, canActivate: [ProductGuard] },
+      { path: ':id/edit', component: ProductEditComponent, canActivate: [ProductGuard] }
       ]),
     SharedModule
   ],

@@ -7,7 +7,7 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { AppRoutingModule } from '../routing.module';
+import { AppRoutingModule } from '../app-routing.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { NavigationComponent } from './nav/nav.component';
@@ -26,8 +26,6 @@ import { SharedModule } from './shared/shared.module';
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
     FlexLayoutModule,
-    //ProductModule,
-    //UserModule,
     AppRoutingModule,
     SharedModule
   ],

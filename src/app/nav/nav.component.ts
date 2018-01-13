@@ -4,39 +4,17 @@ import { AuthenticationService } from '../user/authentication.service';
 @Component({
     selector: 'app-nav',
     template: `
-        <mat-toolbar class="container" color="primary">Chocolates</mat-toolbar>
-        
-        <nav class="container" mat-tab-nav-bar backgroundColor="primary">
-            <!--a mat-tab-link *ngFor="let link of links"
-                [routerLink]="link.path"
-                [active]="route.isActive"
-                routerLinkActive #route="routerLinkActive">
-                <span>{{ link.label }}</span>
-            </a-->
-            <a *ngIf="authService.isAuthenticated()"
-               mat-tab-link
-                [routerLink]="['/products']"
-                routerLinkActive="active">
-                <span>Products</span>
-            </a>
-            <a *ngIf="!authService.isAuthenticated()"
-               mat-tab-link
-               [routerLink]="['/login']"
-               routerLinkActive="active">
-                <span>Login</span>
-            </a>
-            <a *ngIf="authService.isAuthenticated()"
-               mat-tab-link>
-                <span>Welcome {{ authService.currentUser?.displayName}}</span>
-            </a>
-
-            <a *ngIf="authService.isAuthenticated()"
-               mat-tab-link
-               (click)="authService.logout()"
-               routerLinkActive="active">
-                <span>Logout</span>
-            </a>
-        </nav>
+        <mat-toolbar color="primary">
+          <div fxLayoutAlign="space-bewteen center" class="nav-buttons">
+            <div *ngIf="!(authService.user$ | async)?.uid">
+              <button mat-button [routerLink]="['/login']">Login</button>
+            </div>
+            <div *ngIf="(authService.user$ | async)?.uid">
+              <button mat-button [routerLink]="['/products']">Chocolates</button>
+              <button mat-button (click)="authService.logout()">Logout</button>
+            </div>
+          </div>
+        </mat-toolbar>
     `,
     styles: [`
         :host {

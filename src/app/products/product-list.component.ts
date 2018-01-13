@@ -9,9 +9,9 @@ import { Product } from './product.model';
   template: `
       <mat-list-item>
         <h3 matLine>{{ product.name }}</h3>
-        <button mat-mini-fab color="accent"><mat-icon>edit</mat-icon></button>
+        <button mat-mini-fab color="accent" [routerLink]="[product.id, 'edit']"><mat-icon>edit</mat-icon></button>
         &nbsp;
-        <button mat-mini-fab color="warn"><mat-icon>delete_forever</mat-icon></button>
+        <button mat-mini-fab color="warn" (click)="deleteClick.next(product.id)"><mat-icon>delete_forever</mat-icon></button>
       </mat-list-item>
       
       <!--<span [routerLink]="[product.id]">{{ product.name }} {{ product.price }}</span>-->
@@ -21,7 +21,7 @@ import { Product } from './product.model';
 })
 export class ProductItemComponent {
   @Input() product: Product;
-  @Output() editClick = new EventEmitter();
+  @Output() deleteClick = new EventEmitter();
 }
 
 @Component({
@@ -41,9 +41,11 @@ export class ProductListComponent implements OnInit {
     this.products = this.route.snapshot.data['items'];
   }
   deleteProduct(documentId: string) {
+    console.log('deleting ', documentId);
     this.dataService.deleteProduct(documentId)
         .then(() => {
           // TODO: write update to snackbar
+          console.log('Should route to /products now?!')
           this.router.navigate(['/products']);
         });
   }

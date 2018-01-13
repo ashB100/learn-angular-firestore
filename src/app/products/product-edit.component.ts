@@ -49,18 +49,15 @@ import { MatSnackBar } from "@angular/material";
 })
 export class ProductEditComponent implements OnInit {
   productEditForm: FormGroup;
-  
   //product$: Observable<Product | null>;
   product: Product;
   params: any;
-  
   constructor(
       private route: ActivatedRoute,
       private router: Router,
       private productService: ProductDataService,
       private snackBar: MatSnackBar
   ) {}
-  
   ngOnInit() {
     this.route.paramMap
         .map((params: ParamMap) => {
@@ -69,53 +66,46 @@ export class ProductEditComponent implements OnInit {
             id: params.get('id')
           };
         }).subscribe(routeParams => this.params = routeParams);
-    
     if (this.params.isNewProduct) {
       this.product = new Product();
       this.createFormControlGroup(this.product);
-    }
-    else {
+    } else {
       this.productService.getProduct(this.params.id)
           .subscribe((product: Product) => {
             this.product = product;
             this.createFormControlGroup(this.product);
-          })
+          });
     }
   }
-  
   createFormControlGroup(product: Product) {
     this.productEditForm = new FormGroup({
       name: new FormControl(product.name),
       price: new FormControl(product.price),
     });
-    
     //this.productEditForm.setValue(product);
   }
   // edit calls service to update database
   save(product: Product) {
-    if(this.params.isNewProduct) {
+    if (this.params.isNewProduct) {
       this.productService.addProduct(product)
           .then(product => {
             // TODO: display message on snackbar
             this.openSnackBar('Product added', 'successfully');
-            console.log('product created', product);
-          })
-    }
-    else {
+            this.router.navigate(['/products']);
+          });
+    } else {
       this.productService.updateProduct({product: product, id: this.params.id })
           .then(() => {
             // TODO: display message on snackbar
             this.openSnackBar('Product updated', 'successfully');
-            console.log('product updated')
-          })
+            console.log('product updated');
+          });
     }
     //this.productService.updateProduct({product: product, id: this.params.id });
   }
-  
   cancel() {
     this.router.navigate(['/products']);
   }
-  
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
       duration: 6000

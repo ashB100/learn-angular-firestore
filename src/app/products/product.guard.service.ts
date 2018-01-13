@@ -12,15 +12,14 @@ export class ProductGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot,
               state: RouterStateSnapshot): Observable<boolean> {
-    console.log(route, state);
-    const isAuthenticated = this.authService.isAuthenticated();
-    console.log('isAuthenticated', isAuthenticated);
-    return Observable
-        .of(isAuthenticated)
-        .do((allowed: boolean) => {
-          if (!allowed) {
-            this.router.navigateByUrl('/login');
-          }
-        });
+    return this.authService.user$
+      .map(user => {
+        if (user && user.uid) {
+          return true;
+        } else {
+          this.router.navigate(['/login']);
+          return false;
+        }
+      });
   }
 }

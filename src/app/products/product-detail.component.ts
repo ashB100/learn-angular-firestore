@@ -18,16 +18,13 @@ import { ProductDataService } from './product-data.service';
       <ng-template #noproduct>
           <p>Product does not exist</p>
       </ng-template>
-  
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductDetailComponent implements OnInit {
   product$: Observable<Product | null>;
-  
   constructor(private route: ActivatedRoute, private productService: ProductDataService) {
   }
-  
   ngOnInit() {
     this.product$ = this.productService.getProductFromRoute(this.route);
   }

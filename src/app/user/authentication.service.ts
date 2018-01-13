@@ -18,11 +18,13 @@ export enum SupportedProvider {
 @Injectable()
 export class AuthenticationService {
   currentUser: firebase.User | null = null;
+  user$: Observable<firebase.User | null>;
 
   constructor(private afAuth: AngularFireAuth, private router: Router) {
+    // authState is an Observable of firebase.User
+    this.user$ = this.afAuth.authState;
     afAuth.auth.onAuthStateChanged(user => {
       this.currentUser = user;
-      console.log('constructor: user', user);
     });
   }
 
