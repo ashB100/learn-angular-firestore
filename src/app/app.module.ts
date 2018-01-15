@@ -13,6 +13,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NavigationComponent } from './nav/nav.component';
 import { AuthenticationService } from './user/authentication.service';
 import { SharedModule } from './shared/shared.module';
+import { StoreRouterConnectingModule } from "@ngrx/router-store";
+import { StoreModule } from "@ngrx/store";
+import { EffectsModule } from "@ngrx/effects";
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 
 @NgModule({
   declarations: [
@@ -27,7 +31,13 @@ import { SharedModule } from './shared/shared.module';
     AngularFireAuthModule,
     FlexLayoutModule,
     AppRoutingModule,
-    SharedModule
+    StoreRouterConnectingModule,
+    EffectsModule.forRoot([]),
+    StoreModule.forRoot({}),environment.production ? []:  StoreDevtoolsModule.instrument({
+      maxAge: 50
+    }),
+    
+    SharedModule,
   ],
   providers: [
     AuthenticationService

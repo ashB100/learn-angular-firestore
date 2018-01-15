@@ -38,6 +38,7 @@ export class ProductListComponent implements OnInit {
       private dataService: ProductDataService
   ) {}
   ngOnInit() {
+    console.log('product list, data in snapshot', this.route.snapshot);
     this.products = this.route.snapshot.data['items'];
   }
   deleteProduct(documentId: string) {

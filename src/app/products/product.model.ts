@@ -5,7 +5,7 @@ export interface ProductInterface {
 }
 
 export class Product {
-  id?: string;
+  id: string;
   name: string = "";
   price: number = 0;
   
@@ -13,3 +13,4 @@ export class Product {
     Object.assign(this, values);
   }
 }
+

@@ -31,17 +31,6 @@ export class AuthenticationService {
   login(provider: SupportedProvider) {
     // TODO: Do a better function composition here.
     return Observable.fromPromise(this.afAuth.auth.signInWithPopup(this.getProvider(provider)));
-    /*return Observable.create( (observer: Observer<any>) => {
-      this.afAuth.auth.signInWithPopup(this.getProvider(provider))
-        .then(user => {
-            this.currentUser = user;
-            observer.next(user);
-            observer.complete();
-          },
-          err => {
-            observer.error(err);
-          });
-    }); */
   }
 
   getCurrentUser() {
