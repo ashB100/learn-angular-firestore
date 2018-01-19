@@ -15,18 +15,15 @@ export const initialState: ProductState = {
 };
 
 export function reducer(state = initialState, action: ProductsAction): ProductState {
-  
   switch (action.type) {
     case ProductActionType.LOAD_PRODUCTS: {
       return {
         ...state,
         loading: true,
-      }
+      };
     }
-    
     case ProductActionType.LOAD_PRODUCTS_SUCCESS: {
       const products = action.payload;
-      
       const entities = products
         .reduce((entities: { [id: string]: Product }, product: Product) => {
           return {
@@ -36,7 +33,6 @@ export function reducer(state = initialState, action: ProductsAction): ProductSt
         }, {
           ...state.entities
         });
-      
       return {
         ...state,
         loading: false,
@@ -44,7 +40,6 @@ export function reducer(state = initialState, action: ProductsAction): ProductSt
         entities
       };
     }
-    
     // in this case, just return state
     case ProductActionType.LOAD_PRODUCTS_FAIL: {
       return {
@@ -53,8 +48,30 @@ export function reducer(state = initialState, action: ProductsAction): ProductSt
         loaded: false
       };
     }
+    case ProductActionType.CREATE_PRODUCTS_SUCCESS:
+    case ProductActionType.UPDATE_PRODUCTS_SUCCESS: {
+      const product = action.payload;
+      const entities = {
+        ...state.entities,
+        [product.id]: product
+      };
+      return {
+        ...state,
+        entities
+      };
+    }
+    case ProductActionType.REMOVE_PRODUCTS_SUCCESS: {
+      const product = action.payload;
+      const {
+        [product.id]: removed,
+        ...entities
+      } = state.entities;
+      return {
+        ...state,
+        entities
+      };
+    }
   }
-  
   return state;
 }
 
@@ -62,4 +79,9 @@ export const PRODUCT_FEATURE_STORE_NAME = 'products';
 export const getProductState: MemoizedSelector<object, ProductState> = createFeatureSelector(PRODUCT_FEATURE_STORE_NAME);
 export const getEntities = (state: ProductState) => state.entities;
 export const getLoading = (state: ProductState) => state.loading;
-export const getLoaded = (state: ProductState) => state.loaded;
+export const getLoaded = (state: ProductState) => {
+  console.log('getLoaded', state);
+    return state.loaded;
+  }
+}
+

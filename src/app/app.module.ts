@@ -1,22 +1,29 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
 import { AngularFireModule } from 'angularfire2';
-import { environment } from '../environments/environment';
-import { AppComponent } from './app.component';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { AppRoutingModule } from '../app-routing.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
+
+import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
+import { StoreModule, MetaReducer } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+// Not used in production:
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { storeFreeze } from 'ngrx-store-freeze';
+import { reducers, RouterEffects, CustomSerializer } from './store';
+export const metaReducers: MetaReducer<any>[] = !environment.production
+  ? [storeFreeze]
+  : [];
 
 import { NavigationComponent } from './nav/nav.component';
 import { AuthenticationService } from './user/authentication.service';
 import { SharedModule } from './shared/shared.module';
-import { StoreRouterConnectingModule } from "@ngrx/router-store";
-import { StoreModule } from "@ngrx/store";
-import { EffectsModule } from "@ngrx/effects";
-import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { AppRoutingModule } from '../app-routing.module';
+import { AppComponent } from './app.component';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -32,11 +39,11 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
     FlexLayoutModule,
     AppRoutingModule,
     StoreRouterConnectingModule,
-    EffectsModule.forRoot([]),
-    StoreModule.forRoot({}),environment.production ? []:  StoreDevtoolsModule.instrument({
+    EffectsModule.forRoot([RouterEffects]),
+    StoreModule.forRoot(reducers),
+    environment.production ? [] : StoreDevtoolsModule.instrument({
       maxAge: 50
     }),
-    
     SharedModule,
   ],
   providers: [
@@ -46,4 +53,5 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
     AppComponent
   ]
 })
-export class AppModule { }
+export class AppModule {
+}

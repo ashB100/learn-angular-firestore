@@ -1,28 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import { ProductDataService } from './product-data.service';
 import { Product } from './product.model';
-
-@Component({
-  selector: 'product-item',
-  template: `
-      <mat-list-item>
-        <h3 matLine>{{ product.name }}</h3>
-        <button mat-mini-fab color="accent" [routerLink]="[product.id, 'edit']"><mat-icon>edit</mat-icon></button>
-        &nbsp;
-        <button mat-mini-fab color="warn" (click)="deleteClick.next(product.id)"><mat-icon>delete_forever</mat-icon></button>
-      </mat-list-item>
-      
-      <!--<span [routerLink]="[product.id]">{{ product.name }} {{ product.price }}</span>-->
-      <!--<button [routerLink]="[product.id, 'edit']">Edit</button>-->
-      <!--<button (click)="editClick.next(product.id)">Delete</button>-->
-  `,
-})
-export class ProductItemComponent {
-  @Input() product: Product;
-  @Output() deleteClick = new EventEmitter();
-}
+import { Store } from '@ngrx/store';
+import * as fromStore from './store';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'product-list',
@@ -31,17 +13,18 @@ export class ProductItemComponent {
   `]
 })
 export class ProductListComponent implements OnInit {
-  products: Product[] = [];
+  //products: Product[] = [];
+  products$: Observable<Product[]>
   constructor(
       private route: ActivatedRoute,
-      private router: Router,
-      private dataService: ProductDataService
+      private store: Store<fromStore.ProductState>
   ) {}
   ngOnInit() {
-    console.log('product list, data in snapshot', this.route.snapshot);
-    this.products = this.route.snapshot.data['items'];
+    //console.log('product list, data in snapshot', this.route.snapshot);
+    //this.products = this.route.snapshot.data['items'];
+    this.products$ = this.store.select(fromStore.getAllProducts);
   }
-  deleteProduct(documentId: string) {
+  /*deleteProduct(documentId: string) {
     console.log('deleting ', documentId);
     this.dataService.deleteProduct(documentId)
         .then(() => {
@@ -49,5 +32,11 @@ export class ProductListComponent implements OnInit {
           console.log('Should route to /products now?!')
           this.router.navigate(['/products']);
         });
+  } */
+  onRemove(event: Product) {
+    const remove = window.confirm('Are you sure?');
+    if (remove) {
+      this.store.dispatch(new fromStore.RemoveProduct(event));
+    }
   }
 }

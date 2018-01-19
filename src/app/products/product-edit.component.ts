@@ -1,115 +1,105 @@
-import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
-import { ActivatedRoute, ParamMap, Router } from "@angular/router";
-import { Observable } from "rxjs/Observable";
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { MatSnackBar } from '@angular/material';
+import { Store } from '@ngrx/store';
 
-import { Product } from "./product.model";
-import { ProductDataService } from "./product-data.service";
-import { MatSnackBar } from "@angular/material";
+import { Product } from './product.model';
+import { ProductDataService } from './product-data.service';
+import { ProductState } from './store/reducers/products.reducer';
+import * as fromStore from './store';
+import { tap } from 'rxjs/operators';
+import { Go } from '../store/actions/router.actions';
 
 @Component({
   template: `
-      <mat-card>
-          <ng-container *ngIf="product; else productNotFound">
-              <mat-card-header [ngSwitch]="params?.isNewProduct">
-                  <mat-card-title *ngSwitchCase="true">Create New Product</mat-card-title>
-                  <mat-card-title *ngSwitchCase="false">Edit Product</mat-card-title>
-                  <mat-card-subtitle *ngSwitchCase="false">{{product.name}} price: {{product.price}}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content>
-                  <form [formGroup]="productEditForm">
+    <mat-card>
+      <!--ng-container product$ | async-->
+      <!--mat-card-header [ngSwitch]="params?.productId">
+          <mat-card-title *ngSwitchCase="true">Create New Product</mat-card-title>
+          <mat-card-title *ngSwitchCase="false">Edit Product</mat-card-title>
+          <mat-card-subtitle *ngSwitchCase="false">{{product.name}} price: {{product.price}}</mat-card-subtitle>
+      </mat-card-header-->
+      <mat-card-content>
+        <form [formGroup]="productEditForm">
 
-                      <mat-form-field class="full-width">
-                          <input formControlName="name" matInput placeholder="Product Name">
-                      </mat-form-field>
+          <mat-form-field class="full-width">
+            <input formControlName="name" matInput placeholder="Product Name">
+          </mat-form-field>
 
-                      <mat-form-field class="full-width">
-                          <input type="number" formControlName="price" matInput placeholder="Price">
-                      </mat-form-field>
-                  </form>
-              </mat-card-content>
-              <mat-card-actions>
-                  <button (click)="save(productEditForm.value)" type="submit" mat-raised-button color="primary">Save</button>
-                  <button (click)="cancel()" mat-raised-button color="accent">Cancel</button>
-                  <button (click)="cancel()" mat-raised-button color="warn">Cancel</button>
-              </mat-card-actions>
+          <mat-form-field class="full-width">
+            <input type="number" formControlName="price" matInput placeholder="Price">
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+      <mat-card-actions>
+        <button (click)="save(productEditForm.value)" type="submit" mat-raised-button color="primary">Save</button>
+        <button (click)="cancel()" mat-raised-button color="accent">Cancel</button>
+      </mat-card-actions>
 
-          </ng-container>
+      <!--/ng-container-->
 
-          <ng-template #productNotFound>
-              <mat-card-header>Product {{params.id}} not found.</mat-card-header>
-          </ng-template>
-      </mat-card>
+      <ng-template #productNotFound>
+        <mat-card-header>Product {{params.id}} not found.</mat-card-header>
+      </ng-template>
+    </mat-card>
   `,
   styles: [`
-      .full-width {
-          width: 100%;
-      }
+    .full-width {
+      width: 100%;
+    }
   `]
 })
 export class ProductEditComponent implements OnInit {
   productEditForm: FormGroup;
-  //product$: Observable<Product | null>;
   product: Product;
   params: any;
-  constructor(
-      private route: ActivatedRoute,
-      private router: Router,
-      private productService: ProductDataService,
-      private snackBar: MatSnackBar
-  ) {}
-  ngOnInit() {
-    this.route.paramMap
-        .map((params: ParamMap) => {
-          return {
-            isNewProduct: !params.has('id'),
-            id: params.get('id')
-          };
-        }).subscribe(routeParams => this.params = routeParams);
-    if (this.params.isNewProduct) {
-      this.product = new Product();
-      this.createFormControlGroup(this.product);
-    } else {
-      this.productService.getProduct(this.params.id)
-          .subscribe((product: Product) => {
-            this.product = product;
-            this.createFormControlGroup(this.product);
-          });
-    }
+
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private productService: ProductDataService,
+              private store: Store<ProductState>) {
   }
+
+  ngOnInit() {
+    this.productEditForm = new FormGroup({
+      name: new FormControl(),
+      price: new FormControl(),
+    });
+
+    this.store.select(fromStore.getSelectedProduct)
+      .pipe(
+        tap((product: Product | undefined) => {
+          console.log('jkhkproduct', product)
+          if (!!(product)) {
+            this.productEditForm.setValue({ name: product.name });
+            this.productEditForm.setValue({ price: product.price });
+          }
+        })
+      );
+  }
+
   createFormControlGroup(product: Product) {
     this.productEditForm = new FormGroup({
       name: new FormControl(product.name),
       price: new FormControl(product.price),
     });
-    //this.productEditForm.setValue(product);
   }
-  // edit calls service to update database
   save(product: Product) {
     if (this.params.isNewProduct) {
-      this.productService.addProduct(product)
-          .then(product => {
-            // TODO: display message on snackbar
-            this.openSnackBar('Product added', 'successfully');
-            this.router.navigate(['/products']);
-          });
+      this.store.dispatch(new fromStore.CreateProduct(product));
     } else {
-      this.productService.updateProduct({product: product, id: this.params.id })
-          .then(() => {
-            // TODO: display message on snackbar
-            this.openSnackBar('Product updated', 'successfully');
-            console.log('product updated');
-          });
+      this.store.dispatch(new fromStore.UpdateProduct({ ...product, id: this.params.id }));
     }
-    //this.productService.updateProduct({product: product, id: this.params.id });
   }
+
   cancel() {
-    this.router.navigate(['/products']);
-  }
-  openSnackBar(message: string, action: string) {
-    this.snackBar.open(message, action, {
-      duration: 6000
-    });
+    // TODO: use store.dispatch go
+    //this.router.navigate(['/products']);
+    this.store.dispatch(new Go({
+      path: ['/products']
+    }));
   }
 }
 

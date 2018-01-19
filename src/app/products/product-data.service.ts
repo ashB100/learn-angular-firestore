@@ -15,7 +15,7 @@ export class ProductDataService  {
 
     addProduct(product: Partial<Product>) {
         // If using caching, need to think about how to keep cache in sync with database
-        return this.productCollection.add(product as Product);
+        return Observable.fromPromise(this.productCollection.add(product as Product));
     }
 
     getProducts(): Observable<Product[]> {
@@ -50,20 +50,17 @@ export class ProductDataService  {
             }
             return product;
           });
-      //return this.productCollection.doc<Product>(productId).valueChanges();
     }
 
     deleteProduct(productId: string) {
-        return this.afs.doc(`items/${productId}`).delete();
+        return Observable.fromPromise(this.afs.doc(`items/${productId}`).delete());
     }
 
-    updateProduct(options: any) {
-      // Update database and refresh internal cache of products
-      // Look into whether to update only changed product in the product list or
-      // just clear the cache so a new set is fetched from database
-      
+    updateProduct(product: Product) {
+      console.log(product);
       // Get document reference and update
-      return this.productCollection.doc(options.id).update(options.product)
+      // return this.productCollection.doc(options.id).update(options.product);
+      return Observable.fromPromise(this.productCollection.doc(product.id).update(product));
     }
     searchDocument(term: string) {
         return this.afs.collection('items', ref => ref.where('name', '==', term));

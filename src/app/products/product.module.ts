@@ -1,36 +1,36 @@
 import { NgModule } from '@angular/core';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { RouterModule, Routes } from '@angular/router';
+
 import { ProductDetailComponent } from './product-detail.component';
-import { ProductItemComponent, ProductListComponent } from './product-list.component';
+import { ProductListComponent } from './product-list.component';
 import { SharedModule } from '../shared/shared.module';
 import { ProductDataService } from './product-data.service';
-import { RouterModule, Routes } from '@angular/router';
 import { ProductEditComponent } from './product-edit.component';
 import { ProductResolver } from './product.resolver.service';
-import { ProductGuard } from './product.guard.service';
-import { StoreModule } from "@ngrx/store";
-import { EffectsModule } from "@ngrx/effects";
-
+import { AuthGuard } from '../user/auth.guard.service';
 import { effects } from './store';
 import { reducer, PRODUCT_FEATURE_STORE_NAME } from './store/reducers/products.reducer';
+import { ProductExistsGuard } from './store/guards/product-exists.guard';
 
 export const ROUTES: Routes = [
   {
     path: '',
     component: ProductListComponent,
     resolve: {items: ProductResolver},
-    canActivate: [ProductGuard]
+    canActivate: [AuthGuard]
   },
-  { path: 'new', component: ProductEditComponent, canActivate: [ProductGuard] },
-  { path: ':id', component: ProductDetailComponent, canActivate: [ProductGuard] },
-  { path: ':id/edit', component: ProductEditComponent, canActivate: [ProductGuard] }
+  { path: 'new', component: ProductEditComponent, canActivate: [AuthGuard] },
+  { path: ':productId', component: ProductDetailComponent, canActivate: [AuthGuard] },
+  { path: ':productId/edit', component: ProductEditComponent, canActivate: [AuthGuard, ProductExistsGuard] }
 ];
 
 @NgModule({
   declarations: [
     ProductDetailComponent,
     ProductEditComponent,
-    ProductListComponent,
-    ProductItemComponent,
+    ProductListComponent
   ],
   imports: [
     RouterModule.forChild(ROUTES),
@@ -41,7 +41,8 @@ export const ROUTES: Routes = [
   providers: [
     ProductResolver,
     ProductDataService,
-    ProductGuard
+    AuthGuard,
+    ProductExistsGuard
   ]
 })
 export class ProductModule {
