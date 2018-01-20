@@ -9,13 +9,13 @@ import { Product } from './product.model';
 import { ProductDataService } from './product-data.service';
 import { ProductState } from './store/reducers/products.reducer';
 import * as fromStore from './store';
-import { tap } from 'rxjs/operators';
+import { filter, take, tap } from 'rxjs/operators';
 import { Go } from '../store/actions/router.actions';
 
 @Component({
   template: `
     <mat-card>
-      <!--ng-container product$ | async-->
+      <!--ng-container *ngIf="product$ | async as product;else notFound"-->
       <!--mat-card-header [ngSwitch]="params?.productId">
           <mat-card-title *ngSwitchCase="true">Create New Product</mat-card-title>
           <mat-card-title *ngSwitchCase="false">Edit Product</mat-card-title>
@@ -23,11 +23,11 @@ import { Go } from '../store/actions/router.actions';
       </mat-card-header-->
       <mat-card-content>
         <form [formGroup]="productEditForm">
-
+          
           <mat-form-field class="full-width">
             <input formControlName="name" matInput placeholder="Product Name">
           </mat-form-field>
-
+          
           <mat-form-field class="full-width">
             <input type="number" formControlName="price" matInput placeholder="Price">
           </mat-form-field>
@@ -37,12 +37,9 @@ import { Go } from '../store/actions/router.actions';
         <button (click)="save(productEditForm.value)" type="submit" mat-raised-button color="primary">Save</button>
         <button (click)="cancel()" mat-raised-button color="accent">Cancel</button>
       </mat-card-actions>
-
+      
       <!--/ng-container-->
-
-      <ng-template #productNotFound>
-        <mat-card-header>Product {{params.id}} not found.</mat-card-header>
-      </ng-template>
+      
     </mat-card>
   `,
   styles: [`
@@ -54,49 +51,39 @@ import { Go } from '../store/actions/router.actions';
 export class ProductEditComponent implements OnInit {
   productEditForm: FormGroup;
   product: Product;
-  params: any;
-
-  constructor(private route: ActivatedRoute,
-              private router: Router,
-              private productService: ProductDataService,
-              private store: Store<ProductState>) {
-  }
-
+  
+  constructor(private store: Store<ProductState>) {}
+  
   ngOnInit() {
     this.productEditForm = new FormGroup({
+      //id: new FormControl(),
       name: new FormControl(),
       price: new FormControl(),
     });
-
+    
     this.store.select(fromStore.getSelectedProduct)
       .pipe(
-        tap((product: Product | undefined) => {
-          console.log('jkhkproduct', product)
-          if (!!(product)) {
-            this.productEditForm.setValue({ name: product.name });
-            this.productEditForm.setValue({ price: product.price });
-          }
-        })
-      );
+        filter(product => !!product),
+        take(1)
+      )
+      .subscribe((product: Product) => {
+        this.product = product;
+        this.productEditForm.setValue({ name: product.name, price: product.price });
+        // Doing this way will break if more properties got added in the
+        // database collection without updating the FormGroup creation above!
+        //this.productEditForm.setValue({ ...product });
+      });
   }
-
-  createFormControlGroup(product: Product) {
-    this.productEditForm = new FormGroup({
-      name: new FormControl(product.name),
-      price: new FormControl(product.price),
-    });
-  }
+  
   save(product: Product) {
-    if (this.params.isNewProduct) {
-      this.store.dispatch(new fromStore.CreateProduct(product));
+    if (this.product) {
+      this.store.dispatch(new fromStore.UpdateProduct({ ...product, id: this.product.id }));
     } else {
-      this.store.dispatch(new fromStore.UpdateProduct({ ...product, id: this.params.id }));
+      this.store.dispatch(new fromStore.CreateProduct(product));
     }
   }
-
+  
   cancel() {
-    // TODO: use store.dispatch go
-    //this.router.navigate(['/products']);
     this.store.dispatch(new Go({
       path: ['/products']
     }));

@@ -58,6 +58,7 @@ export class ProductsEffects {
   updateProduct$ = this.actions$
     .ofType(fromActions.ProductActionType.UPDATE_PRODUCTS)
     .pipe(
+      tap(action => console.log('tap action updateproduct', action)),
       map((action: fromActions.UpdateProduct) => action.payload),
       switchMap(product => {
         console.log('updateProduct$ product:', product);

@@ -12,11 +12,11 @@ import { StoreModule, MetaReducer } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 // Not used in production:
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { storeFreeze } from 'ngrx-store-freeze';
+//import { storeFreeze } from 'ngrx-store-freeze';
 import { reducers, RouterEffects, CustomSerializer } from './store';
-export const metaReducers: MetaReducer<any>[] = !environment.production
+/*export const metaReducers: MetaReducer<any>[] = !environment.production
   ? [storeFreeze]
-  : [];
+  : []; */
 
 import { NavigationComponent } from './nav/nav.component';
 import { AuthenticationService } from './user/authentication.service';
@@ -47,7 +47,11 @@ import { environment } from '../environments/environment';
     SharedModule,
   ],
   providers: [
-    AuthenticationService
+    AuthenticationService,
+    {
+      provide: RouterStateSerializer,
+      useClass: CustomSerializer
+    }
   ],
   bootstrap: [
     AppComponent

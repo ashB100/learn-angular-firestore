@@ -79,9 +79,7 @@ export const PRODUCT_FEATURE_STORE_NAME = 'products';
 export const getProductState: MemoizedSelector<object, ProductState> = createFeatureSelector(PRODUCT_FEATURE_STORE_NAME);
 export const getEntities = (state: ProductState) => state.entities;
 export const getLoading = (state: ProductState) => state.loading;
-export const getLoaded = (state: ProductState) => {
-  console.log('getLoaded', state);
-    return state.loaded;
-  }
-}
+export const getLoaded = (state: ProductState) => state.loaded;
+
+
 

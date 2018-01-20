@@ -53,14 +53,21 @@ export class ProductDataService  {
     }
 
     deleteProduct(productId: string) {
+      console.log('delete product', productId);
         return Observable.fromPromise(this.afs.doc(`items/${productId}`).delete());
     }
 
     updateProduct(product: Product) {
-      console.log(product);
+      // Use product id to identify document
+      // Remove id from object to update collection with
+      const {
+        id,
+        ...item
+      } = product;
+      
       // Get document reference and update
       // return this.productCollection.doc(options.id).update(options.product);
-      return Observable.fromPromise(this.productCollection.doc(product.id).update(product));
+      return Observable.fromPromise(this.productCollection.doc(id).update(item));
     }
     searchDocument(term: string) {
         return this.afs.collection('items', ref => ref.where('name', '==', term));

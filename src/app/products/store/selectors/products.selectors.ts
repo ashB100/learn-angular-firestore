@@ -14,7 +14,7 @@ export const getSelectedProduct = createSelector(
   getProductEntities,
   fromRoot.getRouterState,
   (entities, router): Product => {
-    console.log('getSelectedProduct', router, entities)
+    console.log('getSelectedProduct', router)
     return router.state && entities[router.state.params.productId];
   }
 );

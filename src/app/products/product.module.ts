@@ -13,13 +13,14 @@ import { AuthGuard } from '../user/auth.guard.service';
 import { effects } from './store';
 import { reducer, PRODUCT_FEATURE_STORE_NAME } from './store/reducers/products.reducer';
 import { ProductExistsGuard } from './store/guards/product-exists.guard';
+import { ProductGuard } from "./store/guards/products.guard";
 
 export const ROUTES: Routes = [
   {
     path: '',
     component: ProductListComponent,
-    resolve: {items: ProductResolver},
-    canActivate: [AuthGuard]
+    //resolve: {items: ProductResolver},
+    canActivate: [AuthGuard, ProductGuard]
   },
   { path: 'new', component: ProductEditComponent, canActivate: [AuthGuard] },
   { path: ':productId', component: ProductDetailComponent, canActivate: [AuthGuard] },
@@ -42,7 +43,8 @@ export const ROUTES: Routes = [
     ProductResolver,
     ProductDataService,
     AuthGuard,
-    ProductExistsGuard
+    ProductExistsGuard,
+    ProductGuard
   ]
 })
 export class ProductModule {
