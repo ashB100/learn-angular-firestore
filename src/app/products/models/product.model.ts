@@ -6,8 +6,9 @@ export interface ProductInterface {
 
 export class Product {
   id: string;
-  name  = '';
+  name = '';
   price = 0;
+  
   constructor(values: Partial<ProductInterface> = {}) {
     Object.assign(this, values);
   }

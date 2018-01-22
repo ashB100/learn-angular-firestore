@@ -6,9 +6,11 @@ Product
   </mat-list-item>
   <mat-list-item *ngFor="let product of (products$ | async)">
     <h3 matLine>{{ product.name }}</h3>
-    <button mat-mini-fab color="accent" [routerLink]="[product.id, 'edit']"><mat-icon>edit</mat-icon></button>
+    <button mat-mini-fab color="accent" [routerLink]="[product.id, 'edit']">
+      <mat-icon>edit</mat-icon>
+    </button>
     &nbsp;
-    <button mat-mini-fab color="warn" (click)="onRemove($event)">
+    <button mat-mini-fab color="warn" (click)="onRemove(product)">
       <mat-icon>delete_forever</mat-icon>
     </button>
   </mat-list-item>

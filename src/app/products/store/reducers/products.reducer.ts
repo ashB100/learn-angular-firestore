@@ -1,5 +1,5 @@
 import { ProductActionType, ProductsAction  } from '../actions/products.action';
-import { Product } from '../../product.model';
+import { Product } from '../../models/product.model';
 import { createFeatureSelector, MemoizedSelector } from "@ngrx/store";
 
 export interface ProductState {

@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { Product } from '../../product.model';
+import { Product } from '../../models/product.model';
 
 // Load Document
 export enum ProductActionType {

@@ -3,7 +3,7 @@ import { Effect, Actions } from '@ngrx/effects';
 import { map, switchMap, catchError, tap, delay } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import * as fromActions from '../actions/products.action';
-import { ProductDataService } from '../../product-data.service';
+import { ProductDataService } from '../../services/product-data.service';
 import { MatSnackBar } from '@angular/material';
 import * as fromRoot from '../../../store';
 
@@ -36,7 +36,7 @@ export class ProductsEffects {
         return this.dataService
           .addProduct(product) // Angular's http returns an observable so we can pipe it
           .pipe(
-            map(() => new fromActions.CreateProductSuccess(product)),
+            map(product => new fromActions.CreateProductSuccess(product)),
             catchError(error => of(new fromActions.CreateProductFail(error)))
           );
       })
@@ -58,10 +58,8 @@ export class ProductsEffects {
   updateProduct$ = this.actions$
     .ofType(fromActions.ProductActionType.UPDATE_PRODUCTS)
     .pipe(
-      tap(action => console.log('tap action updateproduct', action)),
       map((action: fromActions.UpdateProduct) => action.payload),
       switchMap(product => {
-        console.log('updateProduct$ product:', product);
         return this.dataService
           .updateProduct(product)
           .pipe(
@@ -78,6 +76,7 @@ export class ProductsEffects {
     .pipe(
       map((action: fromActions.RemoveProduct) => action.payload),
       switchMap(product => {
+        
         return this.dataService
           .deleteProduct(product.id)
           .pipe(

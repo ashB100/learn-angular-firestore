@@ -6,20 +6,18 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProductDetailComponent } from './product-detail.component';
 import { ProductListComponent } from './product-list.component';
 import { SharedModule } from '../shared/shared.module';
-import { ProductDataService } from './product-data.service';
+import { ProductDataService } from './services/product-data.service';
 import { ProductEditComponent } from './product-edit.component';
-import { ProductResolver } from './product.resolver.service';
 import { AuthGuard } from '../user/auth.guard.service';
 import { effects } from './store';
 import { reducer, PRODUCT_FEATURE_STORE_NAME } from './store/reducers/products.reducer';
-import { ProductExistsGuard } from './store/guards/product-exists.guard';
-import { ProductGuard } from "./store/guards/products.guard";
+import { ProductExistsGuard } from './guards/product-exists.guard';
+import { ProductGuard } from "./guards/products.guard";
 
 export const ROUTES: Routes = [
   {
     path: '',
     component: ProductListComponent,
-    //resolve: {items: ProductResolver},
     canActivate: [AuthGuard, ProductGuard]
   },
   { path: 'new', component: ProductEditComponent, canActivate: [AuthGuard] },
@@ -40,7 +38,6 @@ export const ROUTES: Routes = [
     SharedModule
   ],
   providers: [
-    ProductResolver,
     ProductDataService,
     AuthGuard,
     ProductExistsGuard,
